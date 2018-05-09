@@ -9,17 +9,40 @@ public class OfflineGame : MonoBehaviour
 {
     public Button EndGameButton;
     public GameObject Goal;
+    public Slider[] BirdSliders;
+
 
     private GameObject[] birds;
     private int screenWidth;
     private int screenHeight;
     private GameObject dragged;
     private IEnumerable<Touch> activeTouches;
-    
+    private List<GameObject> allInsects;
+
+    public GameObject[] Birds
+    {
+        get
+        {
+            return birds;
+        }
+    }
+
+    public List<GameObject> AllInsects
+    {
+        get
+        {
+            return allInsects;
+        }
+        set
+        {
+            allInsects = value;
+        }
+    }
 
     // Use this for initialization
     private void Start ()
     {
+        allInsects = new List<GameObject>();
         Screen.orientation = ScreenOrientation.LandscapeLeft;
         screenWidth = Screen.width;
         screenHeight = Screen.height;
@@ -37,16 +60,31 @@ public class OfflineGame : MonoBehaviour
             newBird.GetComponentInChildren<Camera>().gameObject.transform.eulerAngles = Vector3.zero;
 #endif
         }
-        birds = birdsList.ToArray();
+        if (MainMenu.IsAIPlayerActive)
+        {
+            birdsList[0].GetComponent<Bird>().IsAIPlayer = true;
+        }
+        birds = birdsList.ToArray();     
         GenerateInsects();
         GenerateBackground();
+        if (MainMenu.IsAIPlayerActive)
+        {
+            BirdSliders[0].transform.position = new Vector3(BirdSliders[0].transform.position.x, BirdSliders[0].transform.position.y, BirdSliders[0].transform.position.z);
+            BirdSliders[1].transform.position = new Vector3(BirdSliders[1].transform.position.x, BirdSliders[1].transform.position.y, BirdSliders[1].transform.position.z);
+        }
+        else
+        {
+            var difference = BirdSliders[1].transform.position.x - BirdSliders[0].transform.position.x;
+            BirdSliders[0].transform.position = new Vector3(BirdSliders[0].transform.position.x + screenWidth / 2 - difference, BirdSliders[0].transform.position.y, BirdSliders[0].transform.position.z);
+            BirdSliders[1].transform.position = new Vector3(BirdSliders[1].transform.position.x + screenWidth / 2 - difference, BirdSliders[1].transform.position.y, BirdSliders[1].transform.position.z);
+        }
     }
 
     private void GenerateBackground()
     {
         GameObject background = Instantiate(Resources.Load<GameObject>("Prefabs/Background"));
 
-        for (Vector3 currentPosition = new Vector3(0, -2, 0);
+        for (Vector3 currentPosition = new Vector3(-10, -2, 0);
             currentPosition.x < Goal.transform.position.x;
             currentPosition.x += background.GetComponent<SpriteRenderer>().bounds.size.x)
         {
@@ -67,6 +105,7 @@ public class OfflineGame : MonoBehaviour
             {
                 GameObject newInsect = Instantiate(Resources.Load<GameObject>(ResourcesPaths.INSECT));
                 newInsect.transform.position = new Vector3(x, 10 * (Random.value - 0.5f), 0);
+                allInsects.Add(newInsect);
             }
         }
     }
@@ -92,15 +131,31 @@ public class OfflineGame : MonoBehaviour
         }
         Transform left = EndGameButton.gameObject.transform.Find("ImageLeft");
         Transform right = EndGameButton.gameObject.transform.Find("ImageRight");
-        if (loserName == "Player 1")
+        if (birds[0].GetComponent<Bird>().IsAIPlayer)
+        {
+            if (loserName == "Player 1")
+            {
+                left.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/achievement");
+                right.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/achievement");
+            }
+            else
+            {
+                left.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/lost");
+                right.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/lost");
+            }
+        }
+        else if (loserName == "Player 1")
         {
             
             left.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/lost");
             right.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/achievement");
         }
 #if UNITY_ANDROID && !UNITY_EDITOR
-        left.transform.Rotate(0, 0, -90);
-        right.transform.Rotate(0, 0, 90);
+        if (!birds[0].GetComponent<Bird>().IsAIPlayer)
+        {
+            left.transform.Rotate(0, 0, -90);
+            right.transform.Rotate(0, 0, 90);
+        }
 #endif
     }
 

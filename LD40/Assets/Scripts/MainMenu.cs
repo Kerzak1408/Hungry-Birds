@@ -7,14 +7,32 @@ using UnityEngine.UI;
 public class MainMenu : MonoBehaviour
 {
     public Button ButtonSound;
+    private static bool isAIPlayerActive = false; //TODO 
     private static readonly string OFFLINE_GAME = "OfflineGame";
+
+    public static bool IsAIPlayerActive
+    {
+        get
+        {
+            return isAIPlayerActive;
+        }
+    }
 
     private void Start()
     {
+        Screen.orientation = ScreenOrientation.LandscapeLeft;
+    }
+
+    public void LoadGameForTwoPlayers()
+    {
+        isAIPlayerActive = false;
+        Screen.orientation = ScreenOrientation.LandscapeLeft;
+        SceneManager.LoadScene(OFFLINE_GAME);
     }
 
     public void LoadGame()
     {
+        isAIPlayerActive = true;
         Screen.orientation = ScreenOrientation.LandscapeLeft;
         SceneManager.LoadScene(OFFLINE_GAME);
     }

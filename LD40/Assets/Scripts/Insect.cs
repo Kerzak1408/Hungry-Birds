@@ -8,6 +8,7 @@ public class Insect : MonoBehaviour
     private Camera left;
     private Camera right;
     private float clipTimeout;
+    private OfflineGame game;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -17,12 +18,14 @@ public class Insect : MonoBehaviour
         {
             AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>("Music/Crunch"), Camera.main.transform.position);
             bird.ChangeHealth(bonusHp);
+            game.AllInsects.Remove(gameObject);
             Destroy(gameObject);
         }
     }
 
     private void Start()
     {
+        game = Camera.main.GetComponent<OfflineGame>();
         left = GameObject.Find("CameraLeft").GetComponent<Camera>();
         right = GameObject.Find("CameraRight").GetComponent<Camera>();
     }
