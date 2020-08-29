@@ -12,4 +12,4 @@ Open the project in Unity. It was created in [Unity 5.6.3p4](https://unity3d.com
 ## Credits
 * Created at [LD40](https://ldjam.com/events/ludum-dare/40/hungry-birds).
 * Programming: Ľubomír Ohman.
-* Graphics: Lucia Magurová.
+* Graphics: Lucia Ohmanová.
