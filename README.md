@@ -13,3 +13,7 @@ Open the project in Unity. It was created in [Unity 5.6.3p4](https://unity3d.com
 * Created at [LD40](https://ldjam.com/events/ludum-dare/40/hungry-birds).
 * Programming: Ľubomír Ohman.
 * Graphics: Lucia Ohmanová.
+
+![main screen](https://github.com/Kerzak1408/Hungry-Birds/blob/master/main_screen.png?raw=true)
+![game screen](https://github.com/Kerzak1408/Hungry-Birds/blob/master/game_screen.png?raw=true)
+![end screen](https://github.com/Kerzak1408/Hungry-Birds/blob/master/end_screen.png?raw=true)
